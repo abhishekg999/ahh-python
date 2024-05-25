@@ -9,4 +9,5 @@ def install():
     _patch_list()
     _patch_misc()
 
-__all__ = ['install']
+
+__all__ = ["install"]

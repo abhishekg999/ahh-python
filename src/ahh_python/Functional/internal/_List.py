@@ -1,6 +1,7 @@
 from ._Util import sudo_setattr
 
-from functools import reduce 
+from functools import reduce as _reduce 
+from itertools import chain as _chain
 
 """
 Patches to builtins.list.
@@ -24,7 +25,7 @@ def list_filter_impl(self, func):
     return filter(func, self)
 
 def list_reduce_impl(self, func, initial=None):
-    return reduce(func, self, initial) if initial is not None else reduce(func, self)
+    return _reduce(func, self, initial) if initial is not None else _reduce(func, self)
 
 def list_for_each_impl(self, func):
     for i in self:
@@ -54,6 +55,9 @@ def list_to_map_impl(self):
 
 def list_to_set_impl(self):
     return set(self)
+
+def list_flatten_impl(self):
+    return _chain.from_iterable(self)
 
 def _patch_list():
     sudo_setattr(list, "map", list_map_impl)

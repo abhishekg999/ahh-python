@@ -9,7 +9,7 @@ def list_filter_impl(self, func):
     return filter(func, self)
 
 def list_reduce_impl(self, func, initial=None):
-    return reduce(func, self, initial)
+    return reduce(func, self, initial) if initial is not None else reduce(func, self)
 
 def _patch_list():
     sudo_setattr(list, "map", list_map_impl)

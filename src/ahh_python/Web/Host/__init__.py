@@ -1,4 +1,4 @@
-from ..Encodings import encodeURIComponentAll
+from base64 import b64encode
 
 HTTP_HOST_URL = "http://reflect.ahh.bet/#"
 HTTPS_HOST_URL = "https://reflect.ahh.bet/#"
@@ -11,7 +11,7 @@ def https_host(src: str) -> str:
     Returns url of hosted page.
     """
 
-    html = encodeURIComponentAll(src)
+    html = b64encode(src.encode()).decode()
     return f"{HTTPS_HOST_URL}{html}"
 
 
@@ -21,7 +21,7 @@ def http_host(src: str) -> str:
     Hosts page on "http://reflect.ahh.bet/".
     Returns url of hosted page.
     """
-    html = encodeURIComponentAll(src)
+    html = b64encode(src.encode()).decode()
     return f"{HTTP_HOST_URL}{html}"
 
 

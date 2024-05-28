@@ -17,7 +17,7 @@ def https_host(src: str) -> str:
 
 def http_host(src: str) -> str:
     """
-    Takes an HTML source string, returns an HTTPS url.
+    Takes an HTML source string, returns an HTTP url.
     Hosts page on "http://reflect.ahh.bet/".
     Returns url of hosted page.
     """

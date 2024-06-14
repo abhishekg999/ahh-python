@@ -4,6 +4,17 @@ import base64
 import os
 from socketio import Client
 from typing import Generator
+from dataclasses import dataclass
+
+
+@dataclass
+class WebhookRequest:
+    body: str
+    raw_headers: str
+    headers: dict[str, str]
+    ip: str
+    method: str
+    path: str
 
 
 class RequestBinWebhook:
@@ -18,6 +29,8 @@ class RequestBinWebhook:
         self.url = f"https://{self.api_key}.x.pipedream.net/"
 
         self.requests = []
+
+        self._path_ignore = []
 
         @self.sio.on("request")
         def request(data):
@@ -38,10 +51,26 @@ class RequestBinWebhook:
         self.sio.disconnect()
         self.sio.wait()
 
-    def get_requests_sync(self) -> Generator[dict, None, None]:
+    def get_requests_sync(self) -> Generator[WebhookRequest, None, None]:
         while True:
             if self.requests:
                 request_data = self.requests.pop(0)
-                yield request_data
+                if request_data["path"] in self._path_ignore:
+                    continue
+
+                yield WebhookRequest(
+                    request_data.get("body", ""),
+                    request_data.get("raw_headers", ""),
+                    request_data.get("headers", {}),
+                    request_data.get("ip", ""),
+                    request_data.get("method", ""),
+                    request_data.get("path", ""),
+                )
             else:
                 sleep(0.001)
+
+    def ignore_path(self, path: str):
+        self._path_ignore.append(path)
+
+
+__all__ = ["RequestBinWebhook", "WebhookRequest"]
